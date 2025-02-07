@@ -3,7 +3,7 @@ import { Pagination, Box } from '@mui/material';
 import { Product } from '../types/types';
 import styled from '@emotion/styled';
 import ProductCard from './ProductCard';
-import ModalWindow from './ModalWindow';
+import { useNavigate } from 'react-router-dom';
 
 // Интерфейс пропсов для ProductList
 interface ProductListProps {
@@ -39,19 +39,14 @@ const StyledPagination = styled(Pagination)({
 });
 
 // Функциональный компонент ProductList
-const ProductList: React.FC<ProductListProps> = ({ products }) => {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+const ProductList: React.FC<ProductListProps> = ({products}) => {
+  const navigate = useNavigate(); // Получение функции navigate из хука useNavigate
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
 
   // Функция-обработчик клика по карточке продукта
   const handleCardClick = (product: Product) => {
-    setSelectedProduct(product); // Установка выбранного продукта в состояние
-  };
-
-  // Функция для закрытия модального окна
-  const closeModal = () => {
-    setSelectedProduct(null); // Сброс выбранного продукта
+    navigate(`/products/${product.id}`); // Переход на страницу выбранного продукта
   };
 
   // Функция для обработки изменения страницы
@@ -89,11 +84,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         onChange={handlePageChange}
         color="primary"
       />
-
-      {/* Отображение модального окна при выбранном продукте */}
-      {selectedProduct && (
-        <ModalWindow product={selectedProduct} onClose={closeModal} />
-      )}
     </Box>
   );
 };

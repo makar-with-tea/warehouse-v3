@@ -3,6 +3,7 @@ import { AppBar, Toolbar, Typography, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/system';
+import { Link } from 'react-router-dom';
 
 interface NavbarProps {
   toggleSidebar: () => void; // Добавляем пропс для функции
@@ -31,6 +32,14 @@ const NavbarItem = styled(Typography)({
   fontSize: '1em', // Размер шрифта
 });
 
+const StyledLink = styled(Link)({
+  textDecoration: 'none',
+  color: 'inherit',
+  '&:hover': {
+    color: '#dd93ff',
+  },
+});
+
 // Функциональный компонент Navbar
 const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isSidebarOpen }) => {
   return (
@@ -41,10 +50,14 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isSidebarOpen }) => {
           {isSidebarOpen ? <CloseIcon /> : <MenuIcon />}
         </IconButton>
         {/* Остальные пункты меню */}
-        <NavbarItem variant="h6">Товары</NavbarItem>
+        <StyledLink to="/">
+          <NavbarItem variant="h6">Товары</NavbarItem>
+        </StyledLink>
         <NavbarItem variant="h6">Склады</NavbarItem>
         <NavbarItem variant="h6">О системе</NavbarItem>
-        <NavbarItem variant="h6">Личная страница пользователя</NavbarItem>
+        <StyledLink to="/profile">
+          <NavbarItem variant="h6">Личная страница пользователя</NavbarItem>
+        </StyledLink>
       </Toolbar>
     </StyledAppBar>
   );

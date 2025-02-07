@@ -135,6 +135,13 @@ const Sidebar: React.FC<SidebarProps> = ({ categories, isOpen, onClose, onFilter
     onClose(); // Закрыть сайдбар после применения фильтров
   };
 
+  const handleReset = () => {
+    setSearch('');
+    setInStock(false);
+    setCategory('');
+    onFilter({ search: '', inStock: false, category: '' });
+  };
+
   return (
     <StyledDrawer
       anchor="left" // Положение сайдбара (слева)
@@ -202,6 +209,10 @@ const Sidebar: React.FC<SidebarProps> = ({ categories, isOpen, onClose, onFilter
         {/* Кнопка применения фильтров */}
         <StyledButton onClick={handleApplyFilters}>
           Применить
+        </StyledButton>
+        {/* Кнопка сброса */}
+        <StyledButton onClick={handleReset}>
+          Сбросить фильтры
         </StyledButton>
       </Stack>
     </StyledDrawer>

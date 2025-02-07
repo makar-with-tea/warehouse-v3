@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardMedia, CardHeader, Typography, Tooltip, styled } from '@mui/material';
+import { Card, CardContent, CardMedia, CardHeader, Typography, Tooltip, IconButton, styled } from '@mui/material';
 import { Product } from '../types/types';
 import placeholderImage from '../assets/placeholderImage.jpg';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useDispatch } from 'react-redux';
+import { removeProduct } from '../store/slices/productListSlice';
 
 // Стили для карточки с фиксированным размером и эффектом увеличения при наведении
 const StyledCard = styled(Card)({
@@ -63,8 +66,13 @@ const StyledDescriptionTypography = styled(Typography)({
 });
 
 // Функциональный компонент ProductCard
-const ProductCard: React.FC<Product> = ({ name, description, category, quantity, unit, imageUrl }) => {
+const ProductCard: React.FC<Product> = ({ name, description, category, quantity, unit, imageUrl, id }) => {
   const [imgSrc, setImgSrc] = useState(imageUrl || placeholderImage);
+
+  const dispatch = useDispatch();
+  const handleDelete = () => {
+    dispatch(removeProduct(id));
+  };
 
   useEffect(() => {
     setImgSrc(imageUrl || placeholderImage);
@@ -91,6 +99,13 @@ const ProductCard: React.FC<Product> = ({ name, description, category, quantity,
     >
       <StyledCard>
         <CardHeader
+          action={
+            <Tooltip title="Удалить товар">
+              <IconButton onClick={handleDelete}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+        }
           title={name}
           titleTypographyProps={{
             sx: {
