@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { CardContent, CardHeader, Tooltip, IconButton } from '@mui/material';
+import { CardContent, CardHeader, Tooltip } from '@mui/material';
 import { Product } from '../types/types';
 import placeholderImage from '../assets/placeholderImage.jpg';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { useDispatch, useSelector } from 'react-redux';
-import { removeProduct } from '../store/slices/productListSlice';
+import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { StyledCard, StyledCardMedia, StyledDescriptionTypography, StyledImg, StyledTypography } from '../styles/styledComponents';
 
 // Функциональный компонент ProductCard
 const ProductCard: React.FC<Product> = ({ name, description, categoryId, quantity, unit, imageUrl, id }) => {
   const [imgSrc, setImgSrc] = useState(imageUrl || placeholderImage);
-
-  const dispatch = useDispatch();
   const categories = useSelector((state: RootState) => state.categories);
 
-  const handleDelete = () => {
-    dispatch(removeProduct(id));
-  };
 
   useEffect(() => {
     setImgSrc(imageUrl || placeholderImage);
@@ -46,13 +39,6 @@ const ProductCard: React.FC<Product> = ({ name, description, categoryId, quantit
     >
       <StyledCard>
         <CardHeader
-          action={
-            <Tooltip title="Удалить товар">
-              <IconButton onClick={handleDelete}>
-                <DeleteIcon />
-              </IconButton>
-            </Tooltip>
-        }
           title={name}
           titleTypographyProps={{
             sx: {

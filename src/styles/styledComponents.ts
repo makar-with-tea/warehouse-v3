@@ -1,6 +1,6 @@
 import { AppBar, Typography, Card, CardMedia, Button, Box, Pagination,
   Drawer, TextField, Checkbox, Select, InputLabel, MenuItem,
-  Dialog, DialogTitle, IconButton} from '@mui/material';
+  Dialog, DialogTitle, IconButton, Snackbar} from '@mui/material';
 import { styled } from '@mui/system';
 import { Link } from 'react-router-dom';
 
@@ -244,8 +244,38 @@ export const StyledDialogTitle = styled(DialogTitle)({
 
 // Стили для кнопки закрытия
 export const StyledIconButton = styled(IconButton)({
-  position: 'absolute',
-  right: 8,
-  top: 8,
   color: 'white',
+  '&:hover': {
+    color: '#dd93ff',
+  },
+});
+
+export const StyledBigImg = styled('img')({
+  width: '100%',
+  height: 'auto',
+  maxHeight: '300px',
+  borderRadius: '8px',
+  marginBottom: '16px',
+  objectFit: 'contain',
+});
+
+export const StyledH1 = styled(Typography)({
+  color: 'white',
+  fontSize: '2.5em',
+  fontWeight: 700,
+  padding: '1rem',
+  margin: '0px',
+  textAlign: 'center',
+  borderRadius: '8px',
+});
+
+export const StyledSnackbar = styled(Snackbar)({
+  '& .MuiSnackbarContent-root': {
+    backgroundColor: '#58218b',
+    color: 'white',
+    borderRadius: '8px',
+    '& .MuiSnackbarContent-action': {
+      marginRight: '0',
+    },
+  },
 });

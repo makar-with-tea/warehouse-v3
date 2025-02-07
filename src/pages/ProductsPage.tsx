@@ -6,17 +6,7 @@ import ProductList from '../components/ProductList';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import AddProductModal from '../components/AddProductModal';
-import styled from 'styled-components';
 import { StyledButton } from '../styles/styledComponents';
-
-const StyledH1 = styled.h1`
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #fff;
-  padding: 1rem;
-  margin-top: 0px;
-  border-radius: 8px;
-`;
 
 const ProductsPage: React.FC = () => {
   const products = useSelector((state: RootState) => state.productList);
@@ -56,7 +46,6 @@ const ProductsPage: React.FC = () => {
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', marginTop: '0px' }}>
       <Navbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
       <Sidebar categories={categories} isOpen={isSidebarOpen} onClose={toggleSidebar} onFilter={handleFilter} />
-      <StyledH1>Склад "Лаванда"</StyledH1>
       <AddProductModal isOpen={isModalOpen} onClose={closeModal} />
       <Box sx={{ flexGrow: 1, p: 3, mt: 2, width: '100%' }}>
         <StyledButton

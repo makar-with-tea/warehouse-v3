@@ -1,8 +1,8 @@
 import React from 'react';
-import {Toolbar, IconButton } from '@mui/material';
+import { Toolbar, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-import {StyledAppBar, NavbarItem, StyledLink} from '../styles/styledComponents';
+import { StyledAppBar, NavbarItem, StyledLink } from '../styles/styledComponents';
 
 interface NavbarProps {
   toggleSidebar: () => void; // Добавляем пропс для функции

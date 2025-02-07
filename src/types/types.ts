@@ -14,3 +14,12 @@ export interface Category {
     id: number;
     name: string;
 }
+
+// Интерфейс для профиля пользователя
+export interface UserProfile {
+    id: number;
+    name: string;
+    email: string;
+    group: string;
+    avatarUrl?: string;
+}

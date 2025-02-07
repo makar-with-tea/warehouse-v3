@@ -10,12 +10,11 @@ interface ProductListProps {
   products: Product[];
 }
 
-
 // Функциональный компонент ProductList
 const ProductList: React.FC<ProductListProps> = ({products}) => {
   const navigate = useNavigate(); // Получение функции navigate из хука useNavigate
   const [page, setPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 12;
 
   // Функция-обработчик клика по карточке продукта
   const handleCardClick = (product: Product) => {

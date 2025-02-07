@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Button, Typography, Modal, TextField, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { FormControl, DialogContent, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProduct } from '../store/slices/productListSlice';
-import { RootState } from '../store/store';
 import { Product } from '../types/types';
+import { RootState } from '../store/store';
+import { StyledTextField, StyledButton, StyledSelect, StyledInputLabel, StyledDialog, StyledDialogTitle, StyledMenuItem } from '../styles/styledComponents';
 
 interface EditProductModalProps {
   isOpen: boolean;
@@ -24,10 +25,12 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onClose, pr
   };
 
   return (
-    <Modal open={isOpen} onClose={onClose}>
-      <Box sx={{ padding: '0px', backgroundColor: 'white', margin: 'auto', marginTop: '-10%', width: '400px', borderRadius: '8px' }}>
-        <Typography variant="h6">Редактировать товар</Typography>
-        <TextField
+    <StyledDialog open={isOpen} onClose={onClose} maxWidth="md" fullWidth>
+      <StyledDialogTitle>
+        Редактировать товар
+      </StyledDialogTitle>
+      <DialogContent dividers>
+        <StyledTextField
           label="Название товара"
           value={updatedProduct.name}
           onChange={(e) => setUpdatedProduct({ ...updatedProduct, name: e.target.value })}
@@ -35,14 +38,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onClose, pr
           required
           margin="normal"
         />
-        <TextField
-          label="Описание"
-          value={updatedProduct.description}
-          onChange={(e) => setUpdatedProduct({ ...updatedProduct, description: e.target.value })}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
+        <StyledTextField
           label="Количество на складе"
           type="number"
           value={updatedProduct.quantity}
@@ -51,7 +47,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onClose, pr
           required
           margin="normal"
         />
-        <TextField
+        <StyledTextField
           label="Единица измерения"
           value={updatedProduct.unit}
           onChange={(e) => setUpdatedProduct({ ...updatedProduct, unit: e.target.value })}
@@ -59,33 +55,43 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onClose, pr
           required
           margin="normal"
         />
-        <TextField
-          label="URL изображения"
-          value={updatedProduct.imageUrl}
-          onChange={(e) => setUpdatedProduct({ ...updatedProduct, imageUrl: e.target.value })}
+        <StyledTextField
+          label="Описание"
+          value={updatedProduct.description || ''}
+          onChange={(e) => setUpdatedProduct({ ...updatedProduct, description: e.target.value })}
           fullWidth
           margin="normal"
         />
         <FormControl fullWidth margin="normal">
-          <InputLabel id="category-label">Категория</InputLabel>
-          <Select
+          <StyledInputLabel id="category-label">Категория</StyledInputLabel>
+          <StyledSelect
             labelId="category-label"
             value={updatedProduct.categoryId || ''}
             onChange={(e) => setUpdatedProduct({ ...updatedProduct, categoryId: e.target.value as number })}
             required
           >
+            <StyledMenuItem value=""></StyledMenuItem>
             {categories.map((category) => (
-              <MenuItem key={category.id} value={category.id}>
+              <StyledMenuItem key={category.id} value={category.id}>
                 {category.name}
-              </MenuItem>
+              </StyledMenuItem>
             ))}
-          </Select>
+          </StyledSelect>
         </FormControl>
-        <Button variant="contained" color="primary" onClick={handleSaveProduct} sx={{ marginTop: '20px' }}>
+        <StyledTextField
+          label="URL изображения"
+          value={updatedProduct.imageUrl || ''}
+          onChange={(e) => setUpdatedProduct({ ...updatedProduct, imageUrl: e.target.value })}
+          fullWidth
+          margin="normal"
+        />
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+        <StyledButton variant="contained" color="primary" onClick={handleSaveProduct} sx={{ marginTop: '20px' }}>
           Сохранить
-        </Button>
-      </Box>
-    </Modal>
+        </StyledButton>
+        </Box>
+      </DialogContent>
+    </StyledDialog>
   );
 };
 
