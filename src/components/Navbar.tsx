@@ -1,44 +1,13 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, IconButton } from '@mui/material';
+import {Toolbar, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-import { styled } from '@mui/system';
-import { Link } from 'react-router-dom';
+import {StyledAppBar, NavbarItem, StyledLink} from '../styles/styledComponents';
 
 interface NavbarProps {
   toggleSidebar: () => void; // Добавляем пропс для функции
   isSidebarOpen: boolean; // Добавляем пропс для состояния бокового меню
 }
-
-// Стили для навигационной панели
-const StyledAppBar = styled(AppBar)({
-  backgroundColor: '#58218b', // Фон панели навигации
-  color: 'white', // Цвет текста
-  position: 'fixed', // Зафиксированное положение сверху
-  top: 0,
-  width: '100%', // Ширина на 100% от ширины окна просмотра
-  boxShadow: '0 2px 5px rgba(0, 0, 0, 0.3)', // Тень под панелью
-  zIndex: 2000, // Расположение поверх других элементов
-});
-
-// Стили для элементов панели навигации
-const NavbarItem = styled(Typography)({
-  marginRight: '20px', // Отступы между элементами
-  transition: 'color 0.3s', // Плавный переход цвета
-  '&:hover': {
-    color: '#dd93ff', // Смена цвета текста при наведении
-    cursor: 'pointer', // Смена курсора на указатель
-  },
-  fontSize: '1em', // Размер шрифта
-});
-
-const StyledLink = styled(Link)({
-  textDecoration: 'none',
-  color: 'inherit',
-  '&:hover': {
-    color: '#dd93ff',
-  },
-});
 
 // Функциональный компонент Navbar
 const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isSidebarOpen }) => {
@@ -55,6 +24,9 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isSidebarOpen }) => {
         </StyledLink>
         <NavbarItem variant="h6">Склады</NavbarItem>
         <NavbarItem variant="h6">О системе</NavbarItem>
+        <StyledLink to="/categories">
+          <NavbarItem variant="h6">Категории</NavbarItem>
+        </StyledLink>
         <StyledLink to="/profile">
           <NavbarItem variant="h6">Личная страница пользователя</NavbarItem>
         </StyledLink>

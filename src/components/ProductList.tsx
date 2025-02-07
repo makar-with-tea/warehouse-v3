@@ -1,42 +1,15 @@
 import React, { useState } from 'react';
-import { Pagination, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { Product } from '../types/types';
-import styled from '@emotion/styled';
 import ProductCard from './ProductCard';
 import { useNavigate } from 'react-router-dom';
+import {StyledBox, StyledPagination} from '../styles/styledComponents';
 
 // Интерфейс пропсов для ProductList
 interface ProductListProps {
   products: Product[];
 }
 
-const StyledBox = styled(Box)({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-  gap: '20px',
-  rowGap: '30px',
-  justifyContent: 'flex-start',
-  overflow: 'visible',
-});
-
-const StyledPagination = styled(Pagination)({
-  display: 'flex',
-  justifyContent: 'center',
-  marginTop: '20px',
-  '& .MuiPaginationItem-root': {
-    color: '#ffffff',
-    '&.Mui-selected': {
-      backgroundColor: '#58218b',
-      color: '#ffffff',
-      '&:hover': {
-        backgroundColor: '#dd93ff',
-      },
-    },
-    '&:hover': {
-      backgroundColor: '#dd93ff',
-    },
-  },
-});
 
 // Функциональный компонент ProductList
 const ProductList: React.FC<ProductListProps> = ({products}) => {

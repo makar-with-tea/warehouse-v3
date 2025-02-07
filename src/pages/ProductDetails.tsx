@@ -53,6 +53,7 @@ const ProductDetails: React.FC = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const categories = useSelector((state: RootState) => state.categories);
 
   if (!product) {
     return <Typography>Товар не найден</Typography>;
@@ -87,15 +88,15 @@ const ProductDetails: React.FC = () => {
         <strong>Описание:</strong> {product.description}
       </Typography>
       <Typography variant="body2" color="text.secondary" gutterBottom>
-        <strong>Категория:</strong> {product.category}
+        <strong>Категория:</strong> {categories.find((c) => c.id === product.categoryId)?.name}
       </Typography>
       <Typography variant="body2" color="text.secondary">
         <strong>Количество:</strong> {product.quantity} {product.unit}
       </Typography>
-      <StyledButton variant="contained" color="primary" onClick={handleEditProduct}>
+      <StyledButton variant="contained" onClick={handleEditProduct}>
         Редактировать товар
       </StyledButton>
-      <StyledButton variant="contained" color="secondary" onClick={handleDeleteProduct}>
+      <StyledButton variant="contained" onClick={handleDeleteProduct}>
         Удалить товар
       </StyledButton>
       <EditProductModal isOpen={isEditModalOpen} onClose={closeEditModal} product={product} />

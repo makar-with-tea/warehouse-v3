@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { Box, Button, Typography, Modal, TextField } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { FormControl, DialogContent } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import { addProduct } from '../store/slices/productListSlice';
 import { Product } from '../types/types';
+import { RootState } from '../store/store';
+import { StyledTextField, StyledButton, StyledSelect, StyledInputLabel,
+    StyledDialog, StyledDialogTitle, StyledMenuItem } from '../styles/styledComponents';
+
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -11,26 +15,32 @@ interface AddProductModalProps {
 
 const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
+  const categories = useSelector((state: RootState) => state.categories);
   const [newProduct, setNewProduct] = useState<Product>({
     id: 0,
     name: '',
+    description: '',
+    categoryId: 0,
     quantity: 0,
     unit: '',
+    imageUrl: ''
   });
 
   const handleSaveProduct = () => {
     if (newProduct.name && newProduct.quantity && newProduct.unit) {
       dispatch(addProduct({ ...newProduct, id: Date.now() }));
       onClose();
-      setNewProduct({ id: 0, name: '', quantity: 0, unit: '' });
+      setNewProduct({ id: 0, name: '', description: '', categoryId: 0, quantity: 0, unit: '', imageUrl: '' });
     }
   };
 
   return (
-    <Modal open={isOpen} onClose={onClose}>
-      <Box sx={{ padding: '20px', backgroundColor: 'white', margin: 'auto', marginTop: '10%', width: '400px', borderRadius: '8px' }}>
-        <Typography variant="h6">Добавить новый товар</Typography>
-        <TextField
+    <StyledDialog open={isOpen} onClose={onClose} maxWidth="md" fullWidth>
+      <StyledDialogTitle>
+        Добавить новый товар
+        </StyledDialogTitle>
+        <DialogContent dividers>
+        <StyledTextField
           label="Название товара"
           value={newProduct.name}
           onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
@@ -38,7 +48,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
           required
           margin="normal"
         />
-        <TextField
+        <StyledTextField
           label="Количество на складе"
           type="number"
           value={newProduct.quantity}
@@ -47,7 +57,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
           required
           margin="normal"
         />
-        <TextField
+        <StyledTextField
           label="Единица измерения"
           value={newProduct.unit}
           onChange={(e) => setNewProduct({ ...newProduct, unit: e.target.value })}
@@ -55,32 +65,41 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
           required
           margin="normal"
         />
-        <TextField
+        <StyledTextField
           label="Описание"
           value={newProduct.description || ''}
           onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
           fullWidth
           margin="normal"
         />
-        <TextField
-          label="Категория"
-          value={newProduct.category || ''}
-          onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
+        <FormControl fullWidth margin="normal">
+          <StyledInputLabel id="category-label">Категория</StyledInputLabel>
+          <StyledSelect
+            labelId="category-label"
+            value={newProduct.categoryId || ''}
+            onChange={(e) => setNewProduct({ ...newProduct, categoryId: e.target.value as number })}
+            required
+          >
+            <StyledMenuItem value=""></StyledMenuItem>
+            {categories.map((category) => (
+              <StyledMenuItem key={category.id} value={category.id}>
+                {category.name}
+              </StyledMenuItem>
+            ))}
+          </StyledSelect>
+        </FormControl>
+        <StyledTextField
           label="URL изображения"
           value={newProduct.imageUrl || ''}
           onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
           fullWidth
           margin="normal"
         />
-        <Button variant="contained" color="primary" onClick={handleSaveProduct} sx={{ marginTop: '20px' }}>
+        <StyledButton variant="contained" color="primary" onClick={handleSaveProduct} sx={{ marginTop: '20px' }}>
           Сохранить
-        </Button>
-      </Box>
-    </Modal>
+        </StyledButton>
+        </DialogContent>
+    </StyledDialog>
   );
 };
 
