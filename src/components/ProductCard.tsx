@@ -7,7 +7,7 @@ import { RootState } from '../store/store';
 import { StyledCard, StyledCardMedia, StyledDescriptionTypography, StyledImg, StyledTypography } from '../styles/styledComponents';
 
 // Функциональный компонент ProductCard
-const ProductCard: React.FC<Product> = ({ name, description, categoryId, quantity, unit, imageUrl, id }) => {
+const ProductCard: React.FC<Product> = ({ name, description, categoryId, quantity, price, imageUrl, id }) => {
   const [imgSrc, setImgSrc] = useState(imageUrl || placeholderImage);
   const categories = useSelector((state: RootState) => state.categories);
 
@@ -20,7 +20,7 @@ const ProductCard: React.FC<Product> = ({ name, description, categoryId, quantit
     setImgSrc(placeholderImage);
   };
 
-  const category = categories.find((category) => category.id === categoryId)?.name;
+  const category = categories.categories.find((category) => category.id === categoryId)?.name;
 
   return (
     <Tooltip title={description ? description : '-'} arrow
@@ -63,7 +63,10 @@ const ProductCard: React.FC<Product> = ({ name, description, categoryId, quantit
         </StyledCardMedia>
         <CardContent>
           <StyledTypography>
-            {quantity} {unit}
+            Количество на складе: {quantity}
+          </StyledTypography>
+          <StyledTypography>
+            Цена: {price} руб.
           </StyledTypography>
           <StyledTypography>
             {categoryId ? category : '-'}

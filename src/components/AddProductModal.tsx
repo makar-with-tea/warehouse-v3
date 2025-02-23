@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormControl, DialogContent, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProduct } from '../store/slices/productListSlice';
+import { fetchCategories } from '../store/slices/categorySlice';
 import { Product } from '../types/types';
-import { RootState } from '../store/store';
+import { RootState, AppDispatch } from '../store/store';
 import { StyledTextField, StyledButton, StyledSelect, StyledInputLabel, StyledDialog, StyledDialogTitle, StyledMenuItem } from '../styles/styledComponents';
 
 interface AddProductModalProps {
@@ -12,23 +13,27 @@ interface AddProductModalProps {
 }
 
 const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) => {
-    const dispatch = useDispatch();
-    const categories = useSelector((state: RootState) => state.categories);
+    const dispatch = useDispatch<AppDispatch>();
+    const { categories, loading: categoriesLoading, error: categoriesError } = useSelector((state: RootState) => state.categories);
     const [newProduct, setNewProduct] = useState<Product>({
         id: 0,
         name: '',
         description: '',
         categoryId: 0,
         quantity: 0,
-        unit: '',
+        price: 0,
         imageUrl: ''
     });
 
+    useEffect(() => {
+        dispatch(fetchCategories());
+    }, [dispatch]);
+
     const handleSaveProduct = () => {
-        if (newProduct.name && newProduct.quantity && newProduct.unit) {
-            dispatch(addProduct({ ...newProduct, id: Date.now() }));
+        if (newProduct.name && (newProduct.quantity >= 0) && (newProduct.price >= 0) && newProduct.categoryId && newProduct.description) {
+            dispatch(addProduct(newProduct));
             onClose();
-            setNewProduct({ id: 0, name: '', description: '', categoryId: 0, quantity: 0, unit: '', imageUrl: '' });
+            setNewProduct({ id: 0, name: '', description: '', categoryId: 0, quantity: 0, price: 0, imageUrl: '' });
         }
     };
 
@@ -54,9 +59,10 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
                     margin="normal"
                 />
                 <StyledTextField
-                    label="Единица измерения"
-                    value={newProduct.unit}
-                    onChange={(e) => setNewProduct({ ...newProduct, unit: e.target.value })}
+                    label="Цена (в рублях)"
+                    type="number"
+                    value={newProduct.price}
+                    onChange={(e) => setNewProduct({ ...newProduct, price: parseInt(e.target.value) })}
                     fullWidth
                     required
                     margin="normal"
@@ -66,6 +72,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
                     value={newProduct.description || ''}
                     onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
                     fullWidth
+                    required
                     margin="normal"
                 />
                 <FormControl fullWidth margin="normal">
@@ -77,7 +84,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose }) =>
                         required
                     >
                         <StyledMenuItem value=""></StyledMenuItem>
-                        {categories.map((category) => (
+                        {Array.isArray(categories) && categories.map((category) => (
                             <StyledMenuItem key={category.id} value={category.id}>
                                 {category.name}
                             </StyledMenuItem>

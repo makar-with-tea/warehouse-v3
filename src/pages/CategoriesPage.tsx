@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store/store';
-import { Box, List, ListItem, ListItemText, DialogContent } from '@mui/material';
-import { addCategory, updateCategory, removeCategory } from '../store/slices/categorySlice';
+import { RootState, AppDispatch } from '../store/store';
+import { Box, List, ListItem, ListItemText, DialogContent, CircularProgress, Typography } from '@mui/material';
+import { addCategory, updateCategory, removeCategory, fetchCategories } from '../store/slices/categorySlice';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Navbar from '../components/Navbar';
@@ -14,15 +14,19 @@ interface Category {
 }
 
 const CategoriesPage: React.FC = () => {
-    const categories = useSelector((state: RootState) => state.categories);
-    const products = useSelector((state: RootState) => state.productList);
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
+    const { categories, loading: categoriesLoading, error: categoriesError } = useSelector((state: RootState) => state.categories);
+    const products = useSelector((state: RootState) => state.productList.products);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
     const [newCategoryName, setNewCategoryName] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
+
+    useEffect(() => {
+        dispatch(fetchCategories());
+    }, [dispatch]);
 
     const handleAddCategory = () => {
         setIsAddModalOpen(true);
@@ -80,19 +84,29 @@ const CategoriesPage: React.FC = () => {
             <StyledButton onClick={handleAddCategory}>
                 Добавить категорию
             </StyledButton>
-            <List>
-                {categories.map((category) => (
-                    <ListItem key={category.id}>
-                        <ListItemText primary={category.name} />
-                        <StyledIconButton onClick={() => handleEditCategory(category)}>
-                            <EditIcon />
-                        </StyledIconButton>
-                        <StyledIconButton onClick={() => handleDeleteCategory(category.id)}>
-                            <DeleteIcon />
-                        </StyledIconButton>
-                    </ListItem>
-                ))}
-            </List>
+            {categoriesLoading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                    <CircularProgress />
+                </Box>
+            ) : categoriesError ? (
+                <Typography variant="h6" color="error">
+                    {categoriesError}
+                </Typography>
+            ) : (
+                <List>
+                    {Array.isArray(categories) && categories.map((category) => (
+                        <ListItem key={category.id}>
+                            <ListItemText primary={category.name} />
+                            <StyledIconButton onClick={() => handleEditCategory(category)}>
+                                <EditIcon />
+                            </StyledIconButton>
+                            <StyledIconButton onClick={() => handleDeleteCategory(category.id)}>
+                                <DeleteIcon />
+                            </StyledIconButton>
+                        </ListItem>
+                    ))}
+                </List>
+            )}
 
             <StyledDialog open={isAddModalOpen} onClose={closeAddModal} maxWidth="md" fullWidth>
                 <StyledDialogTitle>
