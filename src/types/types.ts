@@ -2,11 +2,11 @@
 export interface Product {
     id: number;
     name: string;
-    description?: string;
-    categoryId?: number;
+    description: string;
+    categoryId: number;
     quantity: number;
-    unit: string;
     imageUrl?: string;
+    price: number;
 }
 
 // Интерфейс для категории

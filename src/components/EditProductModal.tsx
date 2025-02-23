@@ -3,7 +3,7 @@ import { FormControl, DialogContent, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProduct } from '../store/slices/productListSlice';
 import { Product } from '../types/types';
-import { RootState } from '../store/store';
+import { RootState, AppDispatch } from '../store/store';
 import { StyledTextField, StyledButton, StyledSelect, StyledInputLabel, StyledDialog, StyledDialogTitle, StyledMenuItem } from '../styles/styledComponents';
 
 interface EditProductModalProps {
@@ -13,12 +13,12 @@ interface EditProductModalProps {
 }
 
 const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onClose, product }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const categories = useSelector((state: RootState) => state.categories);
   const [updatedProduct, setUpdatedProduct] = useState<Product>(product);
 
   const handleSaveProduct = () => {
-    if (updatedProduct.name && updatedProduct.quantity && updatedProduct.unit && updatedProduct.categoryId) {
+    if (updatedProduct.name && updatedProduct.quantity >= 0 && updatedProduct.price >= 0 && updatedProduct.categoryId && updatedProduct.description) {
       dispatch(updateProduct(updatedProduct));
       onClose();
     }
@@ -48,9 +48,10 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onClose, pr
           margin="normal"
         />
         <StyledTextField
-          label="Единица измерения"
-          value={updatedProduct.unit}
-          onChange={(e) => setUpdatedProduct({ ...updatedProduct, unit: e.target.value })}
+          label="Цена (в рублях)"
+          type="number"
+          value={updatedProduct.price}
+          onChange={(e) => setUpdatedProduct({ ...updatedProduct, price: parseInt(e.target.value) })}
           fullWidth
           required
           margin="normal"
@@ -60,6 +61,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onClose, pr
           value={updatedProduct.description || ''}
           onChange={(e) => setUpdatedProduct({ ...updatedProduct, description: e.target.value })}
           fullWidth
+          required
           margin="normal"
         />
         <FormControl fullWidth margin="normal">
@@ -71,7 +73,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ isOpen, onClose, pr
             required
           >
             <StyledMenuItem value=""></StyledMenuItem>
-            {categories.map((category) => (
+            {Array.isArray(categories) && categories.categories.map((category) => (
               <StyledMenuItem key={category.id} value={category.id}>
                 {category.name}
               </StyledMenuItem>

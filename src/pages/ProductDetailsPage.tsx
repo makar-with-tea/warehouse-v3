@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store/store';
+import { RootState, AppDispatch } from '../store/store';
 import { Box, Typography } from '@mui/material';
 import { removeProduct } from '../store/slices/productListSlice';
 import EditProductModal from '../components/EditProductModal';
@@ -11,13 +11,11 @@ import { StyledBigImg, StyledIconButton } from '../styles/styledComponents';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-
 const ProductDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const product = useSelector((state: RootState) => state.productList.find((p) => p.id === Number(id)));
-  const categories = useSelector((state: RootState) => state.categories);
+  const dispatch = useDispatch<AppDispatch>();
+  const product = useSelector((state: RootState) => state.productList.products.find((p) => p.id === Number(id)));  const categories = useSelector((state: RootState) => state.categories);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState(product?.imageUrl || placeholderImage);
 
@@ -53,43 +51,51 @@ const ProductDetailsPage: React.FC = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', marginTop: '0px' }}>
       <Navbar toggleSidebar={() => {}} isSidebarOpen={false} />
-        <Typography variant="h4" gutterBottom>
-          {product.name}
+      <Typography variant="h4" gutterBottom>
+        {product.name}
+      </Typography>
+      <Box>
+        <StyledIconButton onClick={handleEditProduct}>
+          <EditIcon />
+        </StyledIconButton>
+        <StyledIconButton onClick={handleDeleteProduct}>
+          <DeleteIcon />
+        </StyledIconButton>
+      </Box>
+      <StyledBigImg src={imgSrc} alt={product.name} onError={handleError} />
+      <Box sx={{ marginBottom: '16px' }}>
+        <Typography variant="h6" gutterBottom>
+          Описание
         </Typography>
-        <Box>
-            <StyledIconButton onClick={handleEditProduct}>
-              <EditIcon />
-            </StyledIconButton>
-            <StyledIconButton onClick={handleDeleteProduct}>
-              <DeleteIcon />
-            </StyledIconButton>
-          </Box>
-        <StyledBigImg src={imgSrc} alt={product.name} onError={handleError} />
-        <Box sx={{ marginBottom: '16px' }}>
-          <Typography variant="h6" gutterBottom>
-            Описание
-          </Typography>
-          <Typography variant="body1">
-            {product.description || '-'}
-          </Typography>
-        </Box>
-        <Box sx={{ marginBottom: '16px' }}>
-          <Typography variant="h6" gutterBottom>
-            Категория
-          </Typography>
-          <Typography variant="body1">
-            {categories.find((c) => c.id === product.categoryId)?.name || '-'}
-          </Typography>
-        </Box>
-        <Box sx={{ marginBottom: '16px' }}>
-          <Typography variant="h6" gutterBottom>
-            Количество
-          </Typography>
-          <Typography variant="body1">
-            {product.quantity} {product.unit}
-          </Typography>
-        </Box>
-        <EditProductModal isOpen={isEditModalOpen} onClose={closeEditModal} product={product} />
+        <Typography variant="body1">
+          {product.description || '-'}
+        </Typography>
+      </Box>
+      <Box sx={{ marginBottom: '16px' }}>
+        <Typography variant="h6" gutterBottom>
+          Категория
+        </Typography>
+        <Typography variant="body1">
+          {categories.categories.find((c) => c.id === product.categoryId)?.name || '-'}
+        </Typography>
+      </Box>
+      <Box sx={{ marginBottom: '16px' }}>
+        <Typography variant="h6" gutterBottom>
+          Количество
+        </Typography>
+        <Typography variant="body1">
+          {product.quantity}
+        </Typography>
+      </Box>
+      <Box sx={{ marginBottom: '16px' }}>
+        <Typography variant="h6" gutterBottom>
+          Цена
+        </Typography>
+        <Typography variant="body1">
+          {product.price}
+        </Typography>
+      </Box>
+      <EditProductModal isOpen={isEditModalOpen} onClose={closeEditModal} product={product} />
     </Box>
   );
 };

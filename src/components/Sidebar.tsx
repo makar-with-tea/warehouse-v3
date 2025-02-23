@@ -79,7 +79,7 @@ const Sidebar: React.FC<SidebarProps> = ({ categories, isOpen, onClose, onFilter
             onChange={(e) => setCategoryId(e.target.value as number)}
           >
             <StyledMenuItem value="">Все категории</StyledMenuItem>
-            {categories.map((category) => (
+            {Array.isArray(categories) && categories.map((category) => (
               <StyledMenuItem key={category.id} value={category.id}>
                 {category.name}
               </StyledMenuItem>

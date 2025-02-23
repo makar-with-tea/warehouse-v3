@@ -33,7 +33,7 @@ const ProductList: React.FC<ProductListProps> = ({products}) => {
     <Box sx={{ margin: '20px' }}>
       <StyledBox>
         {/* Отображение списка продуктов с помощью map */}
-        {paginatedProducts.map((product, index) => (
+        {Array.isArray(paginatedProducts) && paginatedProducts.map((product, index) => (
           <Box
             key={index}
             onClick={() => handleCardClick(product)}
