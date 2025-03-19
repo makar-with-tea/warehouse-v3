@@ -7,11 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Navbar from '../components/Navbar';
 import { StyledIconButton, StyledH1, StyledButton, StyledDialog, StyledDialogTitle, StyledTextField, StyledSnackbar } from '../styles/styledComponents';
-
-interface Category {
-    id: number;
-    name: string;
-}
+import { Category } from '../types/types';
 
 const CategoriesPage: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -61,14 +57,16 @@ const CategoriesPage: React.FC = () => {
 
     const saveNewCategory = () => {
         if (newCategoryName) {
-            dispatch(addCategory({ id: categories.length + 1, name: newCategoryName }));
+            dispatch(addCategory({ id: categories.length + 1, name: newCategoryName,
+                allowedGroups: []
+             }));
             closeAddModal();
         }
     };
 
     const saveEditedCategory = () => {
         if (currentCategory && newCategoryName) {
-            dispatch(updateCategory({ ...currentCategory, name: newCategoryName }));
+            dispatch(updateCategory({ id: currentCategory.id, name: newCategoryName, allowedGroups: currentCategory.allowedGroups }));
             closeEditModal();
         }
     };
