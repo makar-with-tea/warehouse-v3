@@ -13,6 +13,7 @@ const CategoriesPage: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { categories, loading: categoriesLoading, error: categoriesError } = useSelector((state: RootState) => state.categories);
     const products = useSelector((state: RootState) => state.productList.products);
+    const user = useSelector((state: RootState) => state.user);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
@@ -57,9 +58,7 @@ const CategoriesPage: React.FC = () => {
 
     const saveNewCategory = () => {
         if (newCategoryName) {
-            dispatch(addCategory({ id: categories.length + 1, name: newCategoryName,
-                allowedGroups: []
-             }));
+            dispatch(addCategory({ id: categories.length + 1, name: newCategoryName, allowedGroups: [] }));
             closeAddModal();
         }
     };
@@ -73,6 +72,10 @@ const CategoriesPage: React.FC = () => {
 
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
+    };
+
+    const isCategoryAccessible = (category: Category) => {
+        return user.group === 'admin' || category.allowedGroups.includes(user.group);
     };
 
     return (
@@ -95,12 +98,16 @@ const CategoriesPage: React.FC = () => {
                     {Array.isArray(categories) && categories.map((category) => (
                         <ListItem key={category.id}>
                             <ListItemText primary={category.name} />
-                            <StyledIconButton onClick={() => handleEditCategory(category)}>
-                                <EditIcon />
-                            </StyledIconButton>
-                            <StyledIconButton onClick={() => handleDeleteCategory(category.id)}>
-                                <DeleteIcon />
-                            </StyledIconButton>
+                            {isCategoryAccessible(category) && (
+                                <>
+                                    <StyledIconButton onClick={() => handleEditCategory(category)}>
+                                        <EditIcon />
+                                    </StyledIconButton>
+                                    <StyledIconButton onClick={() => handleDeleteCategory(category.id)}>
+                                        <DeleteIcon />
+                                    </StyledIconButton>
+                                </>
+                            )}
                         </ListItem>
                     ))}
                 </List>

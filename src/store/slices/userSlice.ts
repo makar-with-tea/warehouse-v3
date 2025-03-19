@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axiosInstance from '../../axiosConfig';
 import { UserProfile } from '../../types/types';
 
@@ -15,10 +15,10 @@ const initialState: UserState = {
 };
 
 // Асинхронное действие для логина
-export const login = createAsyncThunk<{ token: string; user: UserProfile }, { email: string; password: string }>(
+export const login = createAsyncThunk<{ accessToken: string; user: UserProfile }, { email: string; password: string }>(
   'user/login',
   async (credentials) => {
-    const response = await axiosInstance.post<{ token: string; user: UserProfile }>('/login', credentials);
+    const response = await axiosInstance.post<{ accessToken: string; user: UserProfile }>('/login', credentials);
     return response.data;
   }
 );
@@ -34,8 +34,8 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(login.fulfilled, (state, action) => {
-        state.token = action.payload.token;
+      .addCase(login.fulfilled, (state, action: PayloadAction<{ accessToken: string; user: UserProfile }>) => {
+        state.token = action.payload.accessToken;
         state.name = action.payload.user.name;
         state.email = action.payload.user.email;
         state.group = action.payload.user.group;

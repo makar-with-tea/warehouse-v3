@@ -5,11 +5,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../store/store';
 import { StyledH1, StyledButton } from '../styles/styledComponents';
 import { logout } from '../store/slices/userSlice';
-import Login from '../components/Login';
+import { useNavigate } from 'react-router';
 
 const UserProfilePage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => {
+    console.log(state.user);
+    return state.user
+});
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -20,7 +24,16 @@ const UserProfilePage: React.FC = () => {
   };
 
   if (!user.token) {
-    return <Login />;
+    return (
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', marginTop: '0px' }}>
+      <StyledH1 gutterBottom>
+        Пользователь не авторизован
+      </StyledH1>
+      <StyledButton onClick={() => navigate('/login')}>
+        Войти
+      </StyledButton>
+    </Box>
+    );
   }
 
   return (
@@ -37,7 +50,7 @@ const UserProfilePage: React.FC = () => {
           <Typography variant="body2">{user.group}</Typography>
         </Box>
       </Stack>
-      <StyledButton onClick={handleLogout}>
+      <StyledButton onClick={handleLogout} sx={{ marginTop: '20px' }}>
         Выйти
       </StyledButton>
     </Box>
