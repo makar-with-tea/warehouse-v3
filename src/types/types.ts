@@ -13,11 +13,11 @@ export interface Product {
 export interface Category {
     id: number;
     name: string;
+    allowedGroups: string[];
 }
 
 // Интерфейс для профиля пользователя
 export interface UserProfile {
-    id: number;
     name: string;
     email: string;
     group: string;

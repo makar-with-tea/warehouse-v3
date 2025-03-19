@@ -1,12 +1,40 @@
 import React from 'react';
 import { Box, Avatar, Stack, Typography } from '@mui/material';
 import Navbar from '../components/Navbar';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
-import { StyledH1 } from '../styles/styledComponents';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../store/store';
+import { StyledH1, StyledButton } from '../styles/styledComponents';
+import { logout } from '../store/slices/userSlice';
+import { useNavigate } from 'react-router';
 
 const UserProfilePage: React.FC = () => {
-  const user = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector((state: RootState) => {
+    console.log(state.user);
+    return state.user
+});
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await dispatch(logout()).unwrap();
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  };
+
+  if (!user.token) {
+    return (
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', marginTop: '0px' }}>
+      <StyledH1 gutterBottom>
+        Пользователь не авторизован
+      </StyledH1>
+      <StyledButton onClick={() => navigate('/login')}>
+        Войти
+      </StyledButton>
+    </Box>
+    );
+  }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', marginTop: '0px' }}>
@@ -22,6 +50,9 @@ const UserProfilePage: React.FC = () => {
           <Typography variant="body2">{user.group}</Typography>
         </Box>
       </Stack>
+      <StyledButton onClick={handleLogout} sx={{ marginTop: '20px' }}>
+        Выйти
+      </StyledButton>
     </Box>
   );
 };
